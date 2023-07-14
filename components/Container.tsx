@@ -10,6 +10,8 @@ const ContainerWrapper = styled.div<ContainerStyleProps>`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  padding-top: 300px;
+  padding-bottom: 350px;
   height: 100vh;
   width: ${({ width }) => width};
   background-image: url(${({ backgroundImage }) => backgroundImage});
