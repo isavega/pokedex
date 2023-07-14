@@ -4,6 +4,7 @@ type ImageProps = {
   src: string;
   width?: string;
   height?: string;
+  alt?: string;
 };
 
 const ImageElement = styled.img<ImageProps>`
@@ -11,8 +12,10 @@ const ImageElement = styled.img<ImageProps>`
   height: ${({ height }) => height || "auto"};
 `;
 
-const Image: React.FC<ImageProps> = ({ src, width, height, ...rest }) => {
-  return <ImageElement src={src} width={width} height={height} {...rest} />;
+const Image: React.FC<ImageProps> = ({ src, width, height, alt, ...rest }) => {
+  return (
+    <ImageElement src={src} width={width} height={height} alt={alt} {...rest} />
+  );
 };
 
 export default Image;
