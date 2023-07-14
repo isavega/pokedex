@@ -28,6 +28,12 @@ const Content = styled.main`
   padding: 20px;
 `;
 
+const ImageWrapper = styled.div`
+  position: fixed;
+  top: 185px;
+  left: 172px;
+`;
+
 const LayoutWrapper = styled.div`
   min-height: 100vh;
 `;
@@ -42,6 +48,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Header>
         <Image src="pokedex/header.png" alt="header" width="100%" />
       </Header>
+      <ImageWrapper>
+        <Image src="pokedex/avatarIcon.png" alt="header" width="59px" />
+      </ImageWrapper>
       <Content>{children}</Content>
       <Footer>
         <Image src="pokedex/footer.png" alt="footer" width="100%" />
