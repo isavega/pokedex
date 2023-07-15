@@ -56,6 +56,7 @@ type CardProps = {
   title: string;
   leftSubtitle: string;
   rightSubtitle: string;
+  onClick?: () => void;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -64,9 +65,10 @@ const Card: React.FC<CardProps> = ({
   title,
   leftSubtitle,
   rightSubtitle,
+  onClick,
 }) => {
   return (
-    <CardWrapper>
+    <CardWrapper onClick={onClick}>
       <Image src={imageUrl} alt={imageCaption} />
       <ImageCaption>{imageCaption}</ImageCaption>
       <Title>{title}</Title>

@@ -10,28 +10,44 @@ const fontSizeMap = {
 };
 
 type TextStyleProps = {
+  color?: string;
+  fontFamily?: string;
   fontSize: string;
   fontWeight: number;
 };
 
 const TextStyle = styled.span<TextStyleProps>`
+  color: ${({ color }) => color};
+  font-family: ${({ fontFamily }) => fontFamily};
   font-size: ${({ fontSize }) => fontSize};
   font-weight: ${({ fontWeight }) => fontWeight};
-  font-family: "Roboto", sans-serif;
 `;
 
 type TextProps = {
+  color?: string;
+  fontFamily?: string;
   size: keyof typeof fontSizeMap;
   type?: "regular" | "bold";
   children: React.ReactNode;
 };
 
-const Text: React.FC<TextProps> = ({ size, type = "regular", children }) => {
+const Text: React.FC<TextProps> = ({
+  color = "#000000",
+  fontFamily = "Flexo-Regular, xsarial, sans-serif",
+  size,
+  type = "regular",
+  children,
+}) => {
   const fontSize = fontSizeMap[size];
   const fontWeight = type === "bold" ? 700 : 400;
 
   return (
-    <TextStyle fontSize={fontSize} fontWeight={fontWeight}>
+    <TextStyle
+      color={color}
+      fontFamily={fontFamily}
+      fontSize={fontSize}
+      fontWeight={fontWeight}
+    >
       {children}
     </TextStyle>
   );
