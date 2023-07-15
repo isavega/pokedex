@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Image from "./Image";
+import { useRouter } from "next/router";
 
 const Header = styled.header`
   height: 60px;
@@ -43,8 +44,14 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const router = useRouter();
+
+  const onClickHandler = () => {
+    router.push("/");
+  };
+
   return (
-    <LayoutWrapper>
+    <LayoutWrapper onClick={onClickHandler}>
       <Header>
         <Image src="pokedex/header.png" alt="header" width="100%" />
       </Header>
