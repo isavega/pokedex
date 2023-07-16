@@ -29,8 +29,6 @@ const PokemonGrid: FC<Props> = ({ url, index }) => {
     return `N.° ${number}`;
   };
 
-  console.log(types);
-
   return (
     <Card
       key={index}

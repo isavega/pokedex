@@ -1,14 +1,16 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import Head from "next/head";
 import Container from "@/components/Container";
 import SearchBar from "@/components/SearchBar";
 import Text from "@/components/Text";
 import Grid from "@/components/Grid";
+import Button from "@/components/Button";
 import PokemonGrid from "@/components/PokemonGrid";
 import { useInView } from "react-cool-inview";
 import useInfiniteQuery from "@/hooks/useInfiniteQuery";
 
 const App = () => {
+  const [infiniteCharge, setInfiniteCharge] = useState(false);
   const { data, next } = useInfiniteQuery();
 
   const pokemons: any = useMemo(
@@ -18,12 +20,15 @@ const App = () => {
 
   const { observe } = useInView({
     rootMargin: "300px",
-
     onEnter: ({ unobserve }) => {
       unobserve();
       next();
     },
   });
+
+  const infiniteChargeHandler = () => {
+    setInfiniteCharge(true);
+  };
 
   return (
     <>
@@ -55,16 +60,23 @@ const App = () => {
           const { name, url } = data;
 
           return (
-            <li
-              key={name}
-              ref={isLast ? observe : null}
-              className="h-80 w-full"
-            >
-              <PokemonGrid url={url} index={++index} />
+            <li key={name} ref={isLast && infiniteCharge ? observe : null}>
+              <PokemonGrid url={url} index={index + 1} />
             </li>
           );
         })}
       </Grid>
+
+      <Container
+        width="100%"
+        height="50px"
+        paddingTop="100px"
+        paddingBottom="300px"
+      >
+        <Button backgroundColor="#1b82b1" onClick={infiniteChargeHandler}>
+          Cargar más Pokémon
+        </Button>
+      </Container>
     </>
   );
 };

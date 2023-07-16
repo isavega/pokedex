@@ -1,5 +1,5 @@
-import fetcher from "@/utils/fetcher";
 import { useCallback } from "react";
+import fetcher from "@/utils/fetcher";
 import useSWRInfinite from "swr/infinite";
 
 const LIMIT: number = 12;
