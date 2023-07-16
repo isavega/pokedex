@@ -1,55 +1,29 @@
-import { useState, useCallback } from "react";
+import { useMemo } from "react";
 import Head from "next/head";
 import Container from "@/components/Container";
 import SearchBar from "@/components/SearchBar";
 import Text from "@/components/Text";
-import useSWR from "swr";
-import { fetcher } from "@/helpers/utils";
-import { IPokemonResults } from "@/models/pokeApi";
-import HomeScreen from "./Home/HomeScreen";
-import Button from "@/components/Button";
+import Grid from "@/components/Grid";
+import PokemonGrid from "@/components/PokemonGrid";
+import { useInView } from "react-cool-inview";
+import useInfiniteQuery from "@/hooks/useInfiniteQuery";
 
 const App = () => {
-  const [offset, setOffset] = useState(0);
+  const { data, next } = useInfiniteQuery();
 
-  const {
-    data: getAllPokemonData,
-    error: getAllPokemonError,
-    isLoading: getAllPokemonIsLoading,
-  } = useSWR(
-    `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=12`,
-    fetcher
+  const pokemons: any = useMemo(
+    () => data?.flatMap((page: any) => page?.results) ?? [],
+    [data]
   );
 
-  const mapPokemonImageUrl = useCallback((pokemons: any) => {
-    return pokemons.map((result: any, index: any) => {
-      const paddedIndex = ("00" + (index + 1)).slice(-3);
-      const image = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${paddedIndex}.png`;
-      return {
-        ...result,
-        image,
-      };
-    });
-  }, []);
+  const { observe } = useInView({
+    rootMargin: "300px",
 
-  const paginationHandler = () => {
-    setOffset(offset + 12);
-  };
-
-  if (getAllPokemonError)
-    return <div style={{ display: "none" }}>failed to load</div>;
-  if (getAllPokemonIsLoading)
-    return <div style={{ display: "none" }}>loading...</div>;
-
-  const pokemons: Array<IPokemonResults> = getAllPokemonData?.results;
-  const mappedPokemons = mapPokemonImageUrl(pokemons);
-
-  // const getPokemonImageUrl = (pokemonName: string) => {
-  //   const { data, error, isLoading } = useSWR(
-  //     `https://pokeapi.co/api/v2/pokemon/1/${pokemonName}`,
-  //     fetcher
-  //   );
-  // };
+    onEnter: ({ unobserve }) => {
+      unobserve();
+      next();
+    },
+  });
 
   return (
     <>
@@ -75,22 +49,22 @@ const App = () => {
         message="Busca un Pokémon por su nombre o usando su número de la Pokédex Nacional."
         icon="pokedex/searchIcon.png"
       />
+      <Grid>
+        {pokemons?.map((data: any, index: number) => {
+          const isLast = index === pokemons.length - 1;
+          const { name, url } = data;
 
-      <Container backgroundImage="/pokedex/backgroundBlack.png" width="100%">
-        <Container backgroundImage="/pokedex/backgroundWhite.png" width="80%">
-          <HomeScreen pokemons={mappedPokemons} />
-        </Container>
-      </Container>
-      <Container
-        width="100%"
-        height="100px"
-        paddingTop="0px"
-        paddingBottom="0px"
-      >
-        <Button backgroundColor="#30a7d7" onClick={paginationHandler}>
-          Cargar más Pokemón
-        </Button>
-      </Container>
+          return (
+            <li
+              key={name}
+              ref={isLast ? observe : null}
+              className="h-80 w-full"
+            >
+              <PokemonGrid url={url} index={++index} />
+            </li>
+          );
+        })}
+      </Grid>
     </>
   );
 };
