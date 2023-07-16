@@ -19,6 +19,7 @@ const Image = styled.img`
   width: 205px;
   height: 205px;
   margin-bottom: 8px;
+  background-color: #f7f7f7;
 `;
 
 const ImageCaption = styled.p`

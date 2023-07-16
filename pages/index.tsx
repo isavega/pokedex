@@ -37,8 +37,7 @@ const App = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container
-        backgroundImage="/pokedex/backgroundWhite.png"
-        width="80%"
+        width="22%"
         height="78px"
         margin="70px 0px 0px 200px"
         paddingTop="100"
@@ -54,18 +53,22 @@ const App = () => {
         message="Busca un Pokémon por su nombre o usando su número de la Pokédex Nacional."
         icon="pokedex/searchIcon.png"
       />
-      <Grid>
-        {pokemons?.map((data: any, index: number) => {
-          const isLast = index === pokemons.length - 1;
-          const { name, url } = data;
+      <Container backgroundImage="/pokedex/backgroundBlack.png" width="100%">
+        <Container backgroundImage="/pokedex/backgroundWhite.png" width="80%">
+          <Grid>
+            {pokemons?.map((data: any, index: number) => {
+              const isLast = index === pokemons.length - 1;
+              const { name, url } = data;
 
-          return (
-            <li key={name} ref={isLast && infiniteCharge ? observe : null}>
-              <PokemonGrid url={url} index={index + 1} />
-            </li>
-          );
-        })}
-      </Grid>
+              return (
+                <li key={name} ref={isLast && infiniteCharge ? observe : null}>
+                  <PokemonGrid url={url} index={index + 1} />
+                </li>
+              );
+            })}
+          </Grid>
+        </Container>
+      </Container>
 
       <Container
         width="100%"
