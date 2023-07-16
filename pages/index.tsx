@@ -1,104 +1,29 @@
+import { useMemo } from "react";
 import Head from "next/head";
 import Container from "@/components/Container";
-import Grid from "@/components/Grid";
-import Card from "@/components/Card";
 import SearchBar from "@/components/SearchBar";
 import Text from "@/components/Text";
-import { useRouter } from "next/router";
+import Grid from "@/components/Grid";
+import PokemonGrid from "@/components/PokemonGrid";
+import { useInView } from "react-cool-inview";
+import useInfiniteQuery from "@/hooks/useInfiniteQuery";
 
-const dummyObject = [
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0001",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0002",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0003",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0004",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0001",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0002",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0003",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0004",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0001",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0002",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0003",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-  {
-    imageUrl: "/pokedex/pikachu.png",
-    imageCaption: "N.° 0004",
-    title: "Título del Card",
-    greenSubtitle: "Subtítulo verde",
-    purpleSubtitle: "Subtítulo morado",
-  },
-];
+const App = () => {
+  const { data, next } = useInfiniteQuery();
 
-export default function Home() {
-  const router = useRouter();
+  const pokemons: any = useMemo(
+    () => data?.flatMap((page: any) => page?.results) ?? [],
+    [data]
+  );
 
-  const onClickHandler = () => {
-    router.push("/pokemon/1");
-  };
+  const { observe } = useInView({
+    rootMargin: "300px",
+
+    onEnter: ({ unobserve }) => {
+      unobserve();
+      next();
+    },
+  });
 
   return (
     <>
@@ -124,23 +49,24 @@ export default function Home() {
         message="Busca un Pokémon por su nombre o usando su número de la Pokédex Nacional."
         icon="pokedex/searchIcon.png"
       />
-      <Container backgroundImage="/pokedex/backgroundBlack.png" width="100%">
-        <Container backgroundImage="/pokedex/backgroundWhite.png" width="80%">
-          <Grid>
-            {dummyObject.map((item) => (
-              <Card
-                key={item.title}
-                imageUrl={item.imageUrl}
-                imageCaption={item.imageCaption}
-                title={item.title}
-                leftSubtitle={item.greenSubtitle}
-                rightSubtitle={item.purpleSubtitle}
-                onClick={onClickHandler}
-              />
-            ))}
-          </Grid>
-        </Container>
-      </Container>
+      <Grid>
+        {pokemons?.map((data: any, index: number) => {
+          const isLast = index === pokemons.length - 1;
+          const { name, url } = data;
+
+          return (
+            <li
+              key={name}
+              ref={isLast ? observe : null}
+              className="h-80 w-full"
+            >
+              <PokemonGrid url={url} index={++index} />
+            </li>
+          );
+        })}
+      </Grid>
     </>
   );
-}
+};
+
+export default App;

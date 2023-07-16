@@ -1,5 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import PokemonTypeColor from "@/utils/colors";
+
+interface SubtitleStyleProps {
+  color?: string;
+}
 
 const CardWrapper = styled.div`
   border-radius: 4px;
@@ -32,49 +37,57 @@ const SubtitlesWrapper = styled.div`
   display: flex;
 `;
 
-const Subtitle = styled.p`
+const Subtitle = styled.p<SubtitleStyleProps>`
   font-size: 11px;
   padding: 4px 8px;
   margin-right: 8px;
   color: #fff;
   font-family: "Flexo-Medium", arial, sans-serif;
-`;
-
-const LeftSubtitle = styled(Subtitle)`
-  background-color: #9bcc50;
   border-radius: 3px;
+  background-color: ${({ color }) => color};
 `;
 
-const RightSubtitle = styled(Subtitle)`
-  background-color: #b97fc9;
-  border-radius: 3px;
-`;
+interface ObjetTypes {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
+}
 
-type CardProps = {
+interface CardProps {
   imageUrl: string;
   imageCaption: string;
   title: string;
-  leftSubtitle: string;
-  rightSubtitle: string;
+  pokemonTypes: Array<ObjetTypes>;
   onClick?: () => void;
-};
+}
 
 const Card: React.FC<CardProps> = ({
   imageUrl,
   imageCaption,
   title,
-  leftSubtitle,
-  rightSubtitle,
+  pokemonTypes,
   onClick,
 }) => {
+  type PokemonType = keyof typeof PokemonTypeColor;
+
+  const getTypeColor = (nameType: string) => {
+    const color = PokemonTypeColor[nameType as PokemonType].medium;
+    return color;
+  };
+
   return (
     <CardWrapper onClick={onClick}>
       <Image src={imageUrl} alt={imageCaption} />
       <ImageCaption>{imageCaption}</ImageCaption>
       <Title>{title}</Title>
       <SubtitlesWrapper>
-        <LeftSubtitle>{leftSubtitle}</LeftSubtitle>
-        <RightSubtitle>{rightSubtitle}</RightSubtitle>
+        {pokemonTypes.map((pokemonType, index) => (
+          <Subtitle key={index} color={getTypeColor(pokemonType.type.name)}>
+            {pokemonType.type.name}
+          </Subtitle>
+        ))}
       </SubtitlesWrapper>
     </CardWrapper>
   );
