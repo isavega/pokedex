@@ -12,23 +12,11 @@ const Header = styled.header`
   left: 0;
   right: 0;
 `;
-
-const Footer = styled.footer`
-  height: 234px;
-  background-color: #f2f2f2;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-`;
-
 const Content = styled.main`
   margin-top: 80px;
   margin-bottom: 80px;
   padding: 20px;
 `;
-
 const ImageWrapper = styled.div`
   position: fixed;
   top: 185px;
@@ -59,9 +47,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Image src="pokedex/avatarIcon.png" alt="header" width="59px" />
       </ImageWrapper>
       <Content>{children}</Content>
-      <Footer>
-        <Image src="pokedex/footer.png" alt="footer" width="100%" />
-      </Footer>
     </LayoutWrapper>
   );
 };
